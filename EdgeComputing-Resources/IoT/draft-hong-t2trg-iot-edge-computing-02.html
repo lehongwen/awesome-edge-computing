@@ -1,0 +1,1831 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://dublincore.org/documents/2008/08/04/dc-html/">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="index,follow" />
+    <meta name="creator" content="rfcmarkup version 1.129d on tools.ietf.org" />
+    <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+<meta name="DC.Identifier" content="urn:ietf:id:hong-t2trg-iot-edge-computing" />
+<meta name="DC.Description.Abstract" content="Many IoT applications have requirements that cannot be met by the
+traditional Cloud (aka Cloud computing). These include time
+sensitivity, data volume, uplink cost, operation in the face of
+intermittent services, privacy and security. As a result, the IoT is
+driving the Internet toward Edge computing. This document outlines the
+requirements of the emerging IoT Edge and its challenges. It presents
+a snapshot of the state-of-the-art, a general model, and major
+components of the IoT Edge, with the goal to provide a common base for
+future discussions in T2TRG and other IETF WGs and RGs." />
+<meta name="DC.Creator" content="Schooler, Eve" />
+<meta name="DC.Creator" content="Kutscher, Dirk" />
+<meta name="DC.Creator" content="Hong, Jungha" />
+<meta name="DC.Creator" content="Hong, Yong-Geun" />
+<meta name="DC.Creator" content="Kovatsch, Matthias" />
+<meta name="DC.Creator" content="Foy, Xavier de" />
+<meta name="DC.Date.Issued" content="2020-01-17" />
+<meta name="DC.Title" content="IoT Edge Challenges and Functions" />
+
+    <link rel="icon" href="/images/id.png" type="image/png" />
+    <link rel="shortcut icon" href="/images/id.png" type="image/png" />
+    <title>draft-hong-t2trg-iot-edge-computing-02 - IoT Edge Challenges and Functions</title>
+    
+    
+    <style type="text/css">
+	@media only screen 
+	  and (min-width: 992px)
+	  and (max-width: 1199px) {
+	    body { font-size: 14pt; }
+            div.content { width: 96ex; margin: 0 auto; }
+        }
+	@media only screen 
+	  and (min-width: 768px)
+	  and (max-width: 991px) {
+            body { font-size: 14pt; }
+            div.content { width: 96ex; margin: 0 auto; }
+        }
+	@media only screen 
+	  and (min-width: 480px)
+	  and (max-width: 767px) {
+            body { font-size: 11pt; }
+            div.content { width: 96ex; margin: 0 auto; }
+        }
+	@media only screen 
+	  and (max-width: 479px) {
+            body { font-size: 8pt; }
+            div.content { width: 96ex; margin: 0 auto; }
+        }
+	@media only screen 
+	  and (min-device-width : 375px) 
+	  and (max-device-width : 667px) {
+            body { font-size: 9.5pt; }
+            div.content { width: 96ex; margin: 0; }
+        }
+	@media only screen 
+	  and (min-device-width: 1200px) {
+            body { font-size: 10pt; margin: 0 4em; }
+            div.content { width: 96ex; margin: 0; }
+        }
+        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+	    font-weight: bold;
+            /* line-height: 0pt; */
+            display: inline;
+            white-space: pre;
+            font-family: monospace;
+            font-size: 1em;
+	    font-weight: bold;
+        }
+        pre {
+            font-size: 1em;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+	.pre {
+	    white-space: pre;
+	    font-family: monospace;
+	}
+	.header{
+	    font-weight: bold;
+	}
+        .newpage {
+            page-break-before: always;
+        }
+        .invisible {
+            text-decoration: none;
+            color: white;
+        }
+        a.selflink {
+          color: black;
+          text-decoration: none;
+        }
+        @media print {
+            body {
+                font-family: monospace;
+                font-size: 10.5pt;
+            }
+            h1, h2, h3, h4, h5, h6 {
+                font-size: 1em;
+            }
+        
+            a:link, a:visited {
+                color: inherit;
+                text-decoration: none;
+            }
+            .noprint {
+                display: none;
+            }
+        }
+	@media screen {
+	    .grey, .grey a:link, .grey a:visited {
+		color: #777;
+	    }
+            .docinfo {
+                background-color: #EEE;
+            }
+            .top {
+                border-top: 7px solid #EEE;
+            }
+            .pad {
+                padding-top: 7px;
+                line-height: 24px;
+                padding-bottom: 4px;
+            }
+            .bgwhite  { background-color: white; }
+            .bgred    { background-color: #F44; }
+            .bggrey   { background-color: #666; }
+            .bgbrown  { background-color: #840; }            
+            .bgorange { background-color: #FA0; }
+            .bgyellow { background-color: #EE0; }
+            .bgmagenta{ background-color: #F4F; }
+            .bgblue   { background-color: #66F; }
+            .bgcyan   { background-color: #4DD; }
+            .bggreen  { background-color: #4F4; }
+
+            .legend   { font-size: 90%; }
+            .cplate   { font-size: 70%; border: solid grey 1px; }
+	}
+    </style>
+    <!--[if IE]>
+    <style>
+    body {
+       font-size: 13px;
+       margin: 10px 10px;
+    }
+    </style>
+    <![endif]-->
+
+    <script type="text/javascript"><!--
+    function addHeaderTags() {
+	var spans = document.getElementsByTagName("span");
+	for (var i=0; i < spans.length; i++) {
+	    var elem = spans[i];
+	    if (elem) {
+		var level = elem.getAttribute("class");
+                if (level == "h1" || level == "h2" || level == "h3" || level == "h4" || level == "h5" || level == "h6") {
+                    elem.innerHTML = "<"+level+">"+elem.innerHTML+"</"+level+">";		
+                }
+	    }
+	}
+    }
+    var legend_html = "Colour legend:<br />      <table>         <tr><td>Unknown:</td>                   <td><span class='cplate bgwhite'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Draft:</td>                     <td><span class='cplate bgred'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Informational:</td>             <td><span class='cplate bgorange'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Experimental:</td>              <td><span class='cplate bgyellow'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Best Common Practice:</td>      <td><span class='cplate bgmagenta'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Proposed Standard:</td>         <td><span class='cplate bgblue'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Draft Standard (old designation):</td> <td><span class='cplate bgcyan'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Internet Standard:</td>         <td><span class='cplate bggreen'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Historic:</td>                  <td><span class='cplate bggrey'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>         <tr><td>Obsolete:</td>                  <td><span class='cplate bgbrown'>&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>     </table>";
+    function showElem(id) {
+        var elem = document.getElementById(id);
+        elem.innerHTML = eval(id+"_html");
+        elem.style.visibility='visible';
+    }
+    function hideElem(id) {
+        var elem = document.getElementById(id);
+        elem.style.visibility='hidden';        
+        elem.innerHTML = "";
+    }
+    // -->
+    </script>
+</head>
+<body onload="addHeaderTags()">
+  <div class="content">
+   <div style="height: 13px;">
+      <div onmouseover="this.style.cursor='pointer';"
+         onclick="showElem('legend');"
+         onmouseout="hideElem('legend')"
+	 style="height: 6px; position: absolute;"
+         class="pre noprint docinfo bgred"
+         title="Click for colour legend." >                                                                        </div>
+      <div id="legend"
+           class="docinfo noprint pre legend"
+           style="position:absolute; top: 4px; left: 4ex; visibility:hidden; background-color: white; padding: 4px 9px 5px 7px; border: solid #345 1px; "
+           onmouseover="showElem('legend');"
+           onmouseout="hideElem('legend');">
+      </div>
+   </div>
+<!-- draftname: draft-hong-t2trg-iot-edge-computing-02 --><span class="pre noprint docinfo top">[<a href="../html/" title="Document search and retrieval page">Docs</a>] [<a href="https://tools.ietf.org/id/draft-hong-t2trg-iot-edge-computing-02.txt" title="Plaintext version of this document">txt</a>|<a href="/pdf/draft-hong-t2trg-iot-edge-computing-02.txt" title="PDF version of this document">pdf</a>] [<a href='https://datatracker.ietf.org/doc/draft-hong-t2trg-iot-edge-computing' title='IESG Datatracker information for this document'>Tracker</a>] [<a href="mailto:draft-hong-t2trg-iot-edge-computing@ietf.org?subject=draft-hong-t2trg-iot-edge-computing%20" title="Send email to the document authors">Email</a>] [<a href="/rfcdiff?difftype=--hwdiff&amp;url2=draft-hong-t2trg-iot-edge-computing-02.txt" title="Inline diff (wdiff)">Diff1</a>] [<a href="/rfcdiff?url2=draft-hong-t2trg-iot-edge-computing-02.txt" title="Side-by-side diff">Diff2</a>] [<a href="/idnits?url=https://tools.ietf.org/id/draft-hong-t2trg-iot-edge-computing-02.txt" title="Run an idnits check of this document">Nits</a>]               </span><br />
+<span class="pre noprint docinfo">                                                                        </span><br />
+<span class="pre noprint docinfo">Versions: <a href="./draft-hong-t2trg-iot-edge-computing-00">00</a> <a href="./draft-hong-t2trg-iot-edge-computing-01">01</a> <a href="./draft-hong-t2trg-iot-edge-computing-02">02</a>                                                      </span><br />
+<span class="pre noprint docinfo">                                                                        </span><br />
+<pre>
+Network Working Group                                            J. Hong
+Internet-Draft                                                 Y-G. Hong
+Intended status: Informational                                      ETRI
+Expires: 20 July 2020                                          X. de Foy
+                                        InterDigital Communications, LLC
+                                                             M. Kovatsch
+                                    Huawei Technologies Duesseldorf GmbH
+                                                             E. Schooler
+                                                                   Intel
+                                                             D. Kutscher
+                               University of Applied Sciences Emden/Leer
+                                                         17 January 2020
+
+
+                   <span class="h1">IoT Edge Challenges and Functions</span>
+                 <span class="h1">draft-hong-t2trg-iot-edge-computing-02</span>
+
+Abstract
+
+   Many IoT applications have requirements that cannot be met by
+   the traditional Cloud (aka Cloud computing).  These include time
+   sensitivity, data volume, uplink cost, operation in the face of
+   intermittent services, privacy and security.  As a result, the IoT is
+   driving the Internet toward Edge computing.  This document outlines
+   the requirements of the emerging IoT Edge and its challenges.  It
+   presents a snapshot of the state-of-the-art, a general model, and
+   major components of the IoT Edge, with the goal to provide a common
+   base for future discussions in T2TRG and other IETF WGs and RGs.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of <a href="./bcp78">BCP 78</a> and <a href="./bcp79">BCP 79</a>.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at <a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a>.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 20 July 2020.
+
+
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                  [Page 1]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-2" id="page-2" href="#page-2" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+Copyright Notice
+
+   Copyright (c) 2020 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="./bcp78">BCP 78</a> and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (<a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/</a>
+   <a href="https://trustee.ietf.org/license-info">license-info</a>) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Simplified BSD License text
+   as described in Section 4.e of the <a href="https://trustee.ietf.org/license-info">Trust Legal Provisions</a> and are
+   provided without warranty as described in the Simplified BSD License.
+
+Table of Contents
+
+   <a href="#section-1">1</a>.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-3">3</a>
+   <a href="#section-2">2</a>.  Conventions and Terminology . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+   <a href="#section-3">3</a>.  Background  . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+     <a href="#section-3.1">3.1</a>.  Internet of Things (IoT)  . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+     <a href="#section-3.2">3.2</a>.  Cloud Computing . . . . . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+     <a href="#section-3.3">3.3</a>.  Edge Computing  . . . . . . . . . . . . . . . . . . . . .   <a href="#page-5">5</a>
+     <a href="#section-3.4">3.4</a>.  Example of IoT Edge Computing Use Cases . . . . . . . . .   <a href="#page-6">6</a>
+       <a href="#section-3.4.1">3.4.1</a>.  Smart Construction  . . . . . . . . . . . . . . . . .   <a href="#page-6">6</a>
+       <a href="#section-3.4.2">3.4.2</a>.  Smart Grid  . . . . . . . . . . . . . . . . . . . . .   <a href="#page-7">7</a>
+       <a href="#section-3.4.3">3.4.3</a>.  Smart Water System  . . . . . . . . . . . . . . . . .   <a href="#page-7">7</a>
+     3.5.  Common Aspects of Current IoT Edge Computing Service
+           Platforms . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-8">8</a>
+   <a href="#section-4">4</a>.  Challenges for IoT and Impacts of Edge Computing  . . . . . .   <a href="#page-9">9</a>
+     <a href="#section-4.1">4.1</a>.  Time Sensitivity  . . . . . . . . . . . . . . . . . . . .   <a href="#page-9">9</a>
+     <a href="#section-4.2">4.2</a>.  Uplink Cost . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-10">10</a>
+     <a href="#section-4.3">4.3</a>.  Resilience to Intermittent Services . . . . . . . . . . .  <a href="#page-10">10</a>
+     <a href="#section-4.4">4.4</a>.  Privacy and Security  . . . . . . . . . . . . . . . . . .  <a href="#page-10">10</a>
+   <a href="#section-5">5</a>.  IoT Edge Computing Functions  . . . . . . . . . . . . . . . .  <a href="#page-11">11</a>
+     <a href="#section-5.1">5.1</a>.  OAM Components  . . . . . . . . . . . . . . . . . . . . .  <a href="#page-13">13</a>
+       <a href="#section-5.1.1">5.1.1</a>.  Resources Discovery . . . . . . . . . . . . . . . . .  <a href="#page-13">13</a>
+       <a href="#section-5.1.2">5.1.2</a>.  Virtualization Management . . . . . . . . . . . . . .  <a href="#page-13">13</a>
+       <a href="#section-5.1.3">5.1.3</a>.  Authentication and Authorization  . . . . . . . . . .  <a href="#page-13">13</a>
+       <a href="#section-5.1.4">5.1.4</a>.  Edge Organization and Federation  . . . . . . . . . .  <a href="#page-14">14</a>
+     <a href="#section-5.2">5.2</a>.  Functional Components . . . . . . . . . . . . . . . . . .  <a href="#page-14">14</a>
+       <a href="#section-5.2.1">5.2.1</a>.  External APIs . . . . . . . . . . . . . . . . . . . .  <a href="#page-14">14</a>
+       <a href="#section-5.2.2">5.2.2</a>.  Communication Brokering . . . . . . . . . . . . . . .  <a href="#page-14">14</a>
+       <a href="#section-5.2.3">5.2.3</a>.  In-Network Computation  . . . . . . . . . . . . . . .  <a href="#page-15">15</a>
+       <a href="#section-5.2.4">5.2.4</a>.  Edge Caching  . . . . . . . . . . . . . . . . . . . .  <a href="#page-15">15</a>
+       <a href="#section-5.2.5">5.2.5</a>.  Other Services  . . . . . . . . . . . . . . . . . . .  <a href="#page-15">15</a>
+     <a href="#section-5.3">5.3</a>.  Application Components  . . . . . . . . . . . . . . . . .  <a href="#page-15">15</a>
+       <a href="#section-5.3.1">5.3.1</a>.  IoT End Devices Management  . . . . . . . . . . . . .  <a href="#page-15">15</a>
+       <a href="#section-5.3.2">5.3.2</a>.  Data Management . . . . . . . . . . . . . . . . . . .  <a href="#page-16">16</a>
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                  [Page 2]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-3" id="page-3" href="#page-3" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+     <a href="#section-5.4">5.4</a>.  Simulation and Emulation Environments . . . . . . . . . .  <a href="#page-16">16</a>
+   <a href="#section-6">6</a>.  Security Considerations . . . . . . . . . . . . . . . . . . .  <a href="#page-16">16</a>
+   <a href="#section-7">7</a>.  Acknowledgement . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-16">16</a>
+   <a href="#section-8">8</a>.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-17">17</a>
+     <a href="#section-8.1">8.1</a>.  Normative References  . . . . . . . . . . . . . . . . . .  <a href="#page-17">17</a>
+     <a href="#section-8.2">8.2</a>.  Informative References  . . . . . . . . . . . . . . . . .  <a href="#page-17">17</a>
+   <a href="#appendix-A">Appendix A</a>.  Overview of the IoT Edge Computing . . . . . . . . .  <a href="#page-20">20</a>
+     <a href="#appendix-A.1">A.1</a>.  Open Source Projects  . . . . . . . . . . . . . . . . . .  <a href="#page-20">20</a>
+       <a href="#appendix-A.1.1">A.1.1</a>.  Gateway/CPE Platforms . . . . . . . . . . . . . . . .  <a href="#page-20">20</a>
+       <a href="#appendix-A.1.2">A.1.2</a>.  Edge Cloud Management Platforms . . . . . . . . . . .  <a href="#page-22">22</a>
+       <a href="#appendix-A.1.3">A.1.3</a>.  Related Projects  . . . . . . . . . . . . . . . . . .  <a href="#page-22">22</a>
+     <a href="#appendix-A.2">A.2</a>.  Products  . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-23">23</a>
+       <a href="#appendix-A.2.1">A.2.1</a>.  IoT Gateways  . . . . . . . . . . . . . . . . . . . .  <a href="#page-23">23</a>
+       <a href="#appendix-A.2.2">A.2.2</a>.  Edge Cloud Platforms  . . . . . . . . . . . . . . . .  <a href="#page-23">23</a>
+     <a href="#appendix-A.3">A.3</a>.  Standards Initiatives . . . . . . . . . . . . . . . . . .  <a href="#page-24">24</a>
+       <a href="#appendix-A.3.1">A.3.1</a>.  ETSI Multi-access Edge Computing  . . . . . . . . . .  <a href="#page-24">24</a>
+       <a href="#appendix-A.3.2">A.3.2</a>.  Edge Computing Support in 3GPP  . . . . . . . . . . .  <a href="#page-25">25</a>
+       <a href="#appendix-A.3.3">A.3.3</a>.  OpenFog and Industrial Internet Consortium  . . . . .  <a href="#page-25">25</a>
+       <a href="#appendix-A.3.4">A.3.4</a>.  Related Standards . . . . . . . . . . . . . . . . . .  <a href="#page-26">26</a>
+     <a href="#appendix-A.4">A.4</a>.  Research Projects . . . . . . . . . . . . . . . . . . . .  <a href="#page-26">26</a>
+       <a href="#appendix-A.4.1">A.4.1</a>.  Named Function Networking . . . . . . . . . . . . . .  <a href="#page-26">26</a>
+       <a href="#appendix-A.4.2">A.4.2</a>.  5G-CORAL  . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-27">27</a>
+       <a href="#appendix-A.4.3">A.4.3</a>.  FLAME . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-27">27</a>
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-28">28</a>
+
+<span class="h2"><a class="selflink" name="section-1" href="#section-1">1</a>.  Introduction</span>
+
+   Currently, many IoT services leverage the Cloud, since it can provide
+   virtually unlimited storage and processing power.  The reliance of
+   IoT on  back-end cloud computing brings additional advantages such as
+   flexibility and efficiency.  Today's IoT systems are fairly static
+   with respect to integrating and supporting computation.  It's not
+   that there is no computation, but systems are often limited to static
+   configurations (edge gateways, the Cloud).
+
+   However, IoT devices are creating vast amounts of data at the network
+   edge.  To meet IoT use case requirements, that data increasingly is
+   being stored, processed, analyzed, and acted upon close to the data
+   producers.  These requirements include time sensitivity, data volume,
+   uplink cost, resiliency in the face of intermittent connectivity,
+   privacy, and security, which cannot be addressed by today's
+   centralized cloud computing.  These requirements suggest a more
+   flexible way to distribute computing (and storage) and to integrate
+   it in the edge-cloud continuum.  We will refer to this integration of
+   edge computing and IoT as "IoT edge computing".  Our draft describes
+   uses cases, challenges, a proposed system model and derived
+   functional components.
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                  [Page 3]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-4" id="page-4" href="#page-4" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+<span class="h2"><a class="selflink" name="section-2" href="#section-2">2</a>.  Conventions and Terminology</span>
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [<a href="./rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>].
+
+<span class="h2"><a class="selflink" name="section-3" href="#section-3">3</a>.  Background</span>
+
+<span class="h3"><a class="selflink" name="section-3.1" href="#section-3.1">3.1</a>.  Internet of Things (IoT)</span>
+
+   Since the term "Internet of Things" (IoT) was coined by Kevin Ashton
+   in 1999 working on Radio-Frequency Identification (RFID) technology
+   at the Auto-ID Center of the Massachusetts Institute of Technology
+   (MIT) [<a href="#ref-Ashton" title="&quot;That Internet of Things thing&quot;">Ashton</a>], the concept of IoT had been broadened to reflect the
+   vision of connecting the physical world to the virtual world of
+   computers using (wireless) sensor networks with any kind of
+   technology with which the Things can send and receive information
+   without human intervention.  Recently, the term has become more
+   literal by actually connecting Things to the Internet and converging
+   on Internet and also Web technology.  Things are usually embedded
+   systems of various kinds, such as home appliances, mobile equipment,
+   wearable devices, etc.  Things are widely distributed, but typically
+   have limited storage and processing power, which raise concerns
+   regarding reliability, performance, energy consumption, security, and
+   privacy [<a href="#ref-Lin" title="&quot;A survey on Internet of Things: Architecture, enabling technologies, security and privacy, and applications&quot;">Lin</a>].
+
+<span class="h3"><a class="selflink" name="section-3.2" href="#section-3.2">3.2</a>.  Cloud Computing</span>
+
+   Cloud computing has been defined in [<a href="#ref-NIST" title="&quot;The NIST definition of Cloud Computing&quot;">NIST</a>]: "cloud computing is a
+   model for enabling ubiquitous, convenient, on-demand network access
+   to a shared pool of configurable computing resources (e.g., networks,
+   servers, storage, applications, and services) that can be rapidly
+   provisioned and released with minimal management effort or service
+   provider interaction".  Cloud computing has been a predominant
+   technology which has virtually unlimited capacity in terms of storage
+   and processing power.  The availability of virtually unlimited
+   storage and processing capabilities at low cost enabled the
+   realization of a new computing model, in which virtualized resources
+   can be leased in an on-demand fashion, being provided as general
+   utilities.  Companies like Amazon, Google, Facebook, etc. widely
+   adopted this paradigm for delivering services over the Internet,
+   gaining both economical and technical benefits [<a href="#ref-Botta" title="&quot;Integration of Cloud Computing and Internet of Things: A survey&quot;">Botta</a>].
+
+   Now with IoT, we will reach the era of post-clouds where
+   unprecedented volume and variety of data will be generated by things
+   at edge/local networks and many applications will be deployed on the
+   edge networks to consume these IoT data.  Some of the applications
+   may need very short response times, some may contain personal data,
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                  [Page 4]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-5" id="page-5" href="#page-5" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   and others may generate vast amounts of data.  Today's cloud-based
+   service models are not suitable for these applications.
+
+   It is predicted that by 2019, 45% of the data created in IoT will be
+   stored, processed, analyzed and acted close to, or at the edge of the
+   network and about 50 billion devices will connect to the Internet by
+   2020 [<a href="#ref-Evans" title="&quot;The Internet of Things: How the next evolution of the Internet is changing everything&quot;">Evans</a>].  So, moving all data from edge/local networks to the
+   cloud data center may not be an efficient way anymore to process vast
+   amounts of data.
+
+   In cloud computing, users traditionally only consumed IoT data
+   through cloud services.  Now, however, users are also producing IoT
+   data with their mobile devices.  This change requires even more
+   functionality at edge/local networks [<a href="#ref-Shi" title="&quot;Edge computing: vision and challenges&quot;">Shi</a>], to support mobile edge
+   computing considerations.
+
+<span class="h3"><a class="selflink" name="section-3.3" href="#section-3.3">3.3</a>.  Edge Computing</span>
+
+   Edge computing, under certain aspects also referred to as fog
+   computing, is a new paradigm in which substantial computing and
+   storage resources are placed at the edge of the Internet, that is,in
+   close proximity to mobile devices, sensors, actuators, or machines,
+   so that computing happens near data sources [<a href="#ref-Mahadev" title="&quot;The Emergence of Edge Computing&quot;">Mahadev</a>], or closer to
+   where decisions or interactions with the physical world are
+   happening.  It works on both downstream data on behalf of cloud
+   services and upstream data on behalf of IoT services.
+
+   An edge device is any computing or networking resource residing
+   between data sources and cloud-based datacenters.  In edge computing,
+   end devices not only consume data, but also produce data.  And at the
+   network edge, devices not only request services and information from
+   the cloud, but also handle computing tasks including processing,
+   storage, caching, and load balancing on data sent to and from the
+   cloud [<a href="#ref-Shi" title="&quot;Edge computing: vision and challenges&quot;">Shi</a>].
+
+   The definition of edge computing from ISO is a "form of distributed
+   computing in which significant processing and data storage takes
+   place on nodes which are at the edge of the network" [<a href="#ref-ISO_TR" title="&quot;Information Technology - Cloud Computing - Edge Computing Landscape&quot;">ISO_TR</a>].
+   ETSI's definition of multi-access edge computing is a "system which
+   provides an IT service environment and cloud-computing capabilities
+   at the edge of an access network which contains one or more type of
+   access technology, and in close proximity to its users"
+   [<a href="#ref-ETSI_MEC_01" title="&quot;Multi-access Edge Computing (MEC); Terminology&quot;">ETSI_MEC_01</a>].
+
+   The similar concept of fog computing from the Industrial Internet
+   Consortium (formerly OpenFog) is "a horizontal, system-level
+   architecture that distributes computing, storage, control and
+   networking functions closer to the users along a cloud-to-thing
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                  [Page 5]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-6" id="page-6" href="#page-6" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   continuum" <a href="#appendix-A.3.3">Appendix A.3.3</a>.  The term fog computing usually represents
+   the notion of a multi-tiered edge computing, that is, several layers
+   of compute infrastructure between the end devices and the cloud.
+
+   Based on these definitions, we can summarize a general philosophy of
+   edge computing as to distribute the required functions close to users
+   and data, while the difference to classic local systems is the usage
+   of management and orchestration features adopted from cloud
+   computing.
+
+   Actors from various industries approach edge computing using
+   different terms and reference models,although in practice these
+   approaches are not incompatible and may integrate with each other:
+
+   *  The telecommunication industry tends to use a model where edge
+      computing services are deployed over NFV infrastructure at
+      aggregation points, or in proximity to the user equipment (e.g.,
+      gNodeBs) <a href="#appendix-A.3.1">Appendix A.3.1</a>.
+
+   *  Enterprise and campus solutions often interpret edge computing as
+      an "edge cloud", that is, a smaller data center directly connected
+      to the local network (often referred to as "on-premise").
+
+   *  The automation industry defines the edge as the connection point
+      between IT from OT (Operational Technology).  Hence, here edge
+      computing sometimes referres to applying IT solutions to OT
+      problems such as analytics, more flexible user interfaces, or
+      simply having more compute power than an automation controller.
+
+   It is clear that the combination of these models leads to a multi-
+   tier edge computing solution as mentioned above.
+
+<span class="h3"><a class="selflink" name="section-3.4" href="#section-3.4">3.4</a>.  Example of IoT Edge Computing Use Cases</span>
+
+   IoT edge computing can be used in home, industry, grid, healthcare,
+   city, transportation, agriculture, and/or education scenarios.  We
+   discuss here only a few examples of such use cases, to point out
+   differentiating requirements.
+
+<span class="h4"><a class="selflink" name="section-3.4.1" href="#section-3.4.1">3.4.1</a>.  Smart Construction</span>
+
+   In traditional construction domain, heavy equipment and machinery
+   pose risks to humans and property.  Thus, there have been many
+   attempts to deploy technology to protect lives and property in
+   construction sites.  For example, measurements of noise, vibration,
+   and gas can be recorded on a remote server and reported to an
+   inspector.  Today, data produced by such measurements is collected by
+   a local gateway and transferred to a remote server.  This incurs
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                  [Page 6]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-7" id="page-7" href="#page-7" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   transmission costs, e.g., over a LTE connection, and storage costs,
+   e.g., when using Amazon Web Services.  When an inspector needs to
+   investigate an incident, he checks the information stored on a
+   server.
+
+   If we leverage IoT edge computing, sensor data can be processed and
+   analyzed on a gateway located within or near a construction site.
+   And with the help of statistical analysis or machine learning
+   technologies, we can predict future incidents in advance and this
+   prediction can trigger an on-site alarm and a notification to an
+   inspector.
+
+   To determine the exact cause of an incident, sensor data including
+   audio and video are transferred to a remote server.  In this case,
+   audio and video data volume is typically very large and the cost of
+   transmission can be an issue.  Edge computing can be leveraged to
+   predict the time of an incident, which can reduce the volume of
+   transmitted data; while during a normal time period audio and video
+   data may be transmitted with a low resolution, during an emergency,
+   this transmission may use a high resolution.  This adjustment can
+   reduce transmission cost significantly.
+
+<span class="h4"><a class="selflink" name="section-3.4.2" href="#section-3.4.2">3.4.2</a>.  Smart Grid</span>
+
+   In future smart city scenarios, the Smart Grid will be critical in
+   ensuring highly available/efficient energy control in city-wide
+   electricity management.  Edge computing is expected to play a
+   significant role in those systems to improve transmission efficiency
+   of electricity; to react and restore power after a disturbance; to
+   reduce operation costs and reuse renewable energy effectively, since
+   these operations involve local decision making.  In addition, edge
+   computing can help monitoring power generation and power demand, and
+   making electrical energy storage decisions in the smart grid system.
+
+<span class="h4"><a class="selflink" name="section-3.4.3" href="#section-3.4.3">3.4.3</a>.  Smart Water System</span>
+
+   The water system is one of the most important aspects of a city.
+   Effective use of water, and cost-effective and environment-friendly
+   water treatment are critical aspects of this system.  They can be
+   facilitated by edge computing in smart water systems, to help monitor
+   water consumption, transportation and prediction of future water use.
+   For example, water harvesting and ground water monitoring will be
+   supported through edge computing.  Edge computing will also enable
+   locally analyzing collected information related to water control and
+   management, and limit water losses.
+
+
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                  [Page 7]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-8" id="page-8" href="#page-8" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+<span class="h3"><a class="selflink" name="section-3.5" href="#section-3.5">3.5</a>.  Common Aspects of Current IoT Edge Computing Service Platforms</span>
+
+   This section provides an overview of today's IoT edge computing
+   field, based on a limited review of standards, research, open-source
+   and proprietary products in <a href="#appendix-A">Appendix A</a>.
+
+   IoT gateways (Appendix A.2.1, <a href="#appendix-A.1.1">Appendix A.1.1</a>) represent a common
+   class of IoT edge computing products, where the gateway is providing
+   a local service on customer premises, and is remotely managed through
+   a cloud service.  IoT communication protocols are typically used
+   between IoT devices and the gateway, including CoAP, MQTT and many
+   specialized IoT protocols (such as OPC UA and DDS in the Industrial
+   IoT space), while the gateway communicates with the distant cloud
+   typically using HTTPS.  Virtualization platforms enable the
+   deployment of virtual edge computing functions (as VMs, application
+   containers, etc.), including IoT gateway software, on servers in the
+   mobile network infrastructure (at base station and concentration
+   points), in edge datacenters (in central offices) or regional
+   datacenters located near central offices.  End devices are envisioned
+   to become computing devices in forward looking projects, but are not
+   commonly used as such today.
+
+   Physical or virtual IoT gateways can host application programs, which
+   are typically built using an SDK to access local services through a
+   programmatic API.  Edge cloud system operators host their customers'
+   applications VMs or containers on servers located in or near access
+   networks, which can implement local edge services.  For example,
+   mobile networks can provide edge services for radio network
+   information, location and bandwidth management.
+
+   Life cycle management of services and applications on physical IoT
+   gateways is often cloud-based.  Edge cloud management platforms and
+   products (Appendix A.1.2, <a href="#appendix-A.2.2">Appendix A.2.2</a>) adapt cloud management
+   technologies (e.g., Kubernetes) to the edge cloud, i.e., to smaller,
+   distributed computing devices running outside a controlled data
+   center.  Services and application life-cycle is typically using a
+   NFV-like management and orchestration model.
+
+   The platform typically includes services to advertise or consume APIs
+   (e.g., Mp1 interface in ETSI MEC supports service discovery and
+   communication), and enables communicating with local and remote
+   endpoints (e.g., message routing function in IoT gateways).  The
+   service platform is typically extensible by edge applications, since
+   they can advertise an API that other edge applications can consume.
+   IoT communication services include protocols translation, analytics
+   and transcoding.  Communication between edge computing devices is
+   enabled in tiered deployments or distributed deployments.
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                  [Page 8]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-9" id="page-9" href="#page-9" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   An edge cloud platform may enable pass-through without storage or
+   local storage (e.g., on IoT gateways).  Some edge cloud platforms use
+   a distributed form of storage such as an ICN network (e.g., NFN nodes
+   can store data in NDN, <a href="#appendix-A.4.1">Appendix A.4.1</a>) or a distributed storage
+   platform (e.g., such as Ceph, <a href="#appendix-A.1.2">Appendix A.1.2</a>).  External storage,
+   e.g., on databases in distant or local IT cloud, is typically used
+   for filtered data deemed worthy of long term storage, or in some
+   cases for all data, for example when required for regulatory reasons.
+
+   Stateful computing is supported on platforms hosting native programs,
+   VMs or containers.  Stateless computing is supported on platforms
+   providing a "serverless computing" service (a.k.a. function-as-
+   a-service), or on systems based on named function networking.
+
+   In many IoT use cases, a typical network usage pattern is high volume
+   uplink with some form of traffic reduction enabled by processing over
+   edge computing devices.  Alternatives to traffic reduction include
+   deferred transmission (to off-peak hours or using physical shipping).
+   Downlink traffic includes application control and software updates.
+   Other, downlink-heavy traffic patterns are not excluded but are more
+   often associated with non-IoT usage (e.g., video CDNs).
+
+<span class="h2"><a class="selflink" name="section-4" href="#section-4">4</a>.  Challenges for IoT and Impacts of Edge Computing</span>
+
+   As the IoT is maturing, systems are converging, deployments are
+   growing, and IoT technology is used with more and more demanding
+   applications such as industrial, automotive, or healthcare.  This
+   leads to new challenges for the network infrastructure.  In
+   particular, the amount of data created at the edge is expected to be
+   vast.  Industrial machines such as laser cutters already produce over
+   1 terabyte per hour, the same applies for autonomous cars [<a href="#ref-NVIDIA" title="&quot;Training AI for Self-Driving Vehicles: the Challenge of Scale&quot;">NVIDIA</a>].
+   90% of IoT data is expected to be stored, processed, analyzed, and
+   acted upon close to the source [<a href="#ref-Kelly" title="&quot;Internet of Things Data to Top 1.6 Zettabytes by 2022&quot;">Kelly</a>], as cloud computing models
+   alone cannot address the new challenges [<a href="#ref-Chiang" title="&quot;Fog and IoT: An overview of research opportunities&quot;">Chiang</a>].  Below we discuss
+   IoT use case requirements that are moving cloud capabilities to be
+   more proximate and more distributed and disaggregated.
+
+<span class="h3"><a class="selflink" name="section-4.1" href="#section-4.1">4.1</a>.  Time Sensitivity</span>
+
+   Many industrial control systems, such as manufacturing systems, smart
+   grids, oil and gas systems, etc., often require stringent end-to-end
+   latency between the sensor and control node.  While some IoT
+   applications may require latency below a few tens of milliseconds
+   [<a href="#ref-Weiner" title="&quot;Design of a low-latency, high-reliability wireless communication system for control applications&quot;">Weiner</a>], industrial robots and motion control systems have use cases
+   for cycle times in the order of microseconds [<a href="#ref-_60802" title="&quot;Use Cases IEC/IEEE 60802 V1.3&quot;">_60802</a>].  An important
+   aspect for real-time communications is not only the latency, but also
+   guarantees for jitter.  This means control packets need to arrive
+   with as little variation as possible with a strict deadline.  Given
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                  [Page 9]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-10" id="page-10" href="#page-10" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   the best-effort characteristics of the Internet, this challenge is
+   virtually impossible to address, without comprehending end-to-end
+   guarantees for individual message delivery and continuous data flows.
+
+<span class="h3"><a class="selflink" name="section-4.2" href="#section-4.2">4.2</a>.  Uplink Cost</span>
+
+   Many IoT deployments are not challenged by a constrained network
+   bandwidth to the cloud.  The fifth generation mobile networks (5G)
+   and Wi-Fi 6 both theoretically top out at 10 gigabits per second
+   (i.e., 4.5 terabyte per hour), which enables high-bandwidth uplinks.
+   However, the resulting cost for high-bandwidth connectivity to upload
+   all data to the cloud is unjustifiable and impractical for most IoT
+   applications.  In some settings, e.g. in aeronautical communication,
+   higher communication costs reduce the amount of data that can be
+   practically uploaded even further.
+
+<span class="h3"><a class="selflink" name="section-4.3" href="#section-4.3">4.3</a>.  Resilience to Intermittent Services</span>
+
+   Many IoT devices such as sensors, data collectors, actuators,
+   controllers, etc. have very limited hardware resources and cannot
+   rely solely on their limited resources to meet all their computing
+   and/or storage needs.  They require reliable, uninterrupted or
+   resilient services to augment their capabilities in order to fulfill
+   their application tasks.  This is hard and partly impossible to
+   achieve with cloud services for systems such as vehicles, drones, or
+   oil rigs that have intermittent network connectivity.
+
+<span class="h3"><a class="selflink" name="section-4.4" href="#section-4.4">4.4</a>.  Privacy and Security</span>
+
+   When IoT services are deployed at home, personal information can be
+   learned from detected usage data.  For example, one can extract
+   information about employment, family status, age, and income by
+   analyzing smart meter data [<a href="#ref-ENERGY" title="&quot;Revealing Household Characteristics from Smart Meter Data&quot;">ENERGY</a>].  Policy makers started to
+   provide frameworks that limit the usage of personal data and put
+   strict requirements on data controllers and processors.  However,
+   data stored indefinitely in the cloud also increases the risk of data
+   leakage, for instance, through attacks on rich targets.
+
+   Industrial systems are often argued to not have privacy implications,
+   as no personal data is gathered.  Yet data from such systems is often
+   highly sensitive, as one might be able to infer trade secrets such as
+   the setup of production lines.  Hence, the owner of these systems are
+   generally reluctant to upload IoT data to the cloud.
+
+
+
+
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 10]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-11" id="page-11" href="#page-11" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+<span class="h2"><a class="selflink" name="section-5" href="#section-5">5</a>.  IoT Edge Computing Functions</span>
+
+   Edge computing is expected to play an important role in deploying new
+   IoT services integrated with Big Data and AI, enabled by flexible in-
+   network computing platforms.  Although there are lots of approaches
+   to edge computing, we attempt to lay out a general model and list
+   associated logical functions in this section.  In practice, this
+   model can map to different architectures, such as:
+
+   *  A single IoT gateway, or a hierarchy of IoT gateways, typically
+      connected to the cloud (e.g., to extend the traditionally cloud-
+      based management of IoT devices and data to the edge).  A common
+      role of an IoT Gateway is to provide access to an heterogeneous
+      set of IoT devices/sensors; handle IoT data; and deliver IoT data
+      to its final destination in a cloud network.  Whereas an IoT
+      gateway needs interactions with cloud like as conventional cloud
+      computing, it can also operate independently.
+
+   *  A set of distributed computing nodes, e.g., embedded in switches,
+      routers, edge cloud servers or mobile devices.  In the future,
+      some IoT end devices may have enough computing capabilities to
+      participate in such distributed systems.  In this model, edge
+      computing nodes can collaborate with each other to share their
+      resources.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 11]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-12" id="page-12" href="#page-12" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+                +---------------------+
+                |   Remote network    |  +---------------+
+                |(e.g., cloud network)|  |   Service     |
+                +-----------+---------+  |   Operator    |
+                            |            +------+--------+
+                            |                   |
+             +--------------+-------------------+-----------+
+             |            Edge Computing Domain             |
+             |                                              |
+             |   OAM Components                             |
+             |   - Resources Discovery                      |
+             |   - Virtualization Management                |
+             |   - Authentication                           |
+             |   - Edge Organization and Federation         |
+             |   - IoT End Devices Management               |
+             |   - ...                                      |
+             |                                              |
+             |   Functional Components                      |
+             |   - External APIs                            |
+             |   - Communication Brokering                  |
+             |   - In-Network Computation                   |
+             |   - Edge Caching                             |
+             |   - Data Analysis                            |
+             |   - Other Services                           |
+             |   - ...                                      |
+             |                                              |
+             +------+--------------+---------------+--------+
+                    |              |               |
+                    |              |               |
+               +----+---+    +-----+--+      +-----+--+
+               |  End   |    |  End   | .... |  End   |
+               |Device 1|    |Device 2| .... |Device n|
+               +--------+    +--------+      +--------+
+
+                   Figure 1: Model of IoT Edge Computing
+
+   In this general model, the edge computing domain is interconnected
+   with IoT end devices (southbound connectivity) and possibly with a
+   remote/cloud network (northbound connectivity), and with a service
+   operator's system.  Edge computing nodes provide multiple logical
+   functions, or components, which may not all be present in a given
+   system.  They may be implemented in a centralized or distributed
+   fashion, in the edge network, or through some interworking between
+   the edge network and a remote cloud network.
+
+   We now attempt to enumerate major edge computing domain components.
+   They are here loosely organized into OAM, functional and application
+   components, with the understanding that the distinction between these
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 12]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-13" id="page-13" href="#page-13" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   classes may not always be clear, depending on actual system
+   architectures.
+
+<span class="h3"><a class="selflink" name="section-5.1" href="#section-5.1">5.1</a>.  OAM Components</span>
+
+   Edge computing OAM goes beyond the network-related OAM functions
+   listed in [<a href="./rfc6291" title="&quot;Guidelines for the Use of the &quot;">RFC6291</a>].  Besides infrastructure (network, storage and
+   computing resources), edge computing systems can also include
+   computing environments (for VMs, software containers, functions), IoT
+   end devices, data and code.
+
+   Operation related functions include performance monitoring for
+   service level agreement measurement; fault management and
+   provisioning for links, nodes, compute and storage resources,
+   platforms and services.  Administration covers network/compute/
+   storage resources, platforms and services discovery, configuration
+   and planning.  Management covers monitoring and diagnostics of
+   failures, as well as means to minimize their occurrence and take
+   corrective actions.  This may include software updates management,
+   high service availability through redundancy and multipath
+   communication.
+
+   We further detail a few OAM components.
+
+<span class="h4"><a class="selflink" name="section-5.1.1" href="#section-5.1.1">5.1.1</a>.  Resources Discovery</span>
+
+   This component is about finding infrastructure resources, such as
+   compute, network and storage, but also other resources such as IoT
+   end devices, sensors, data, code, or services.
+
+<span class="h4"><a class="selflink" name="section-5.1.2" href="#section-5.1.2">5.1.2</a>.  Virtualization Management</span>
+
+   Some IoT edge computing systems make use of virtualized (compute,
+   storage and networking) resources, which need to be allocated and
+   configured.
+
+<span class="h4"><a class="selflink" name="section-5.1.3" href="#section-5.1.3">5.1.3</a>.  Authentication and Authorization</span>
+
+   This can cover authenticating platforms, end devices, data, code
+   units and applications or users interacting with the system.  Today,
+   centralized gateway-based systems rely for device authentication on
+   the installation of a secret on IoT end devices and on computing
+   devices (e.g., a device certificate stored in a hardware security
+   module).
+
+
+
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 13]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-14" id="page-14" href="#page-14" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+<span class="h4"><a class="selflink" name="section-5.1.4" href="#section-5.1.4">5.1.4</a>.  Edge Organization and Federation</span>
+
+   In a distributed system context, once edge devices have discovered
+   and authenticated each other, they can be organized, or self-
+   organize, into hierarchies or clusters.  Such groups can also form
+   federations with other edge or remote clouds.
+
+<span class="h3"><a class="selflink" name="section-5.2" href="#section-5.2">5.2</a>.  Functional Components</span>
+
+<span class="h4"><a class="selflink" name="section-5.2.1" href="#section-5.2.1">5.2.1</a>.  External APIs</span>
+
+   An IoT edge cloud may provide a northbound data plane or management
+   plane interface to a remote network, e.g., a cloud, home or
+   enterprise network.  This interface does not exist in standalone
+   (local-only) scenarios.  To support such an interface when it exists,
+   an edge computing component needs to expose an API, deal with
+   authentication and authorization, support secure communication.
+
+   An IoT edge cloud may provide an API or interface to local users
+   (e.g., to facilitate local management), or to mobile users (e.g., to
+   provide access to services and applications, or to manage data
+   published by the mobile device).
+
+<span class="h4"><a class="selflink" name="section-5.2.2" href="#section-5.2.2">5.2.2</a>.  Communication Brokering</span>
+
+   A typical function of IoT edge computing is to facilitate
+   communication with IoT end devices: for example, enable clients to
+   register as recipients for data from devices, as well as forwarding/
+   routing of traffic to or from IoT end devices, enabling various data
+   discovery and redistribution patterns, e.g., north-south with clouds,
+   east-west with other edge devices [<a href="#ref-DATA-DISCOVERY" title="&quot;Edge Data Discovery for COIN&quot;">DATA-DISCOVERY</a>].  Another aspect
+   of a communication component is dispatching of alerts and
+   notifications to interested consumers both inside and outside of the
+   edge computing domain.  Protocol translation, analytics and
+   transcoding may also be performed when necessary.
+
+   Communication brokering may be centralized in some systems, e.g.,
+   using a hub-and-spoke message broker, or distributed like with
+   message buses, possibly in a layered bus approach.  Distributed
+   systems may leverage direct communication between end devices and
+   communication devices, such as device-to-device links.  Brokers
+   functions can include ensuring communication reliability,
+   traceability, and in some cases transaction management.
+
+   QoS can be provided in some systems through the combination of
+   network QoS (e.g., traffic engineering or wireless resource
+   scheduling) and compute/storage resource allocations.  In some
+   systems a bandwidth manager service can be exposed to enable
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 14]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-15" id="page-15" href="#page-15" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   allocation of bandwidth to/from an edge computing application
+   instance.
+
+<span class="h4"><a class="selflink" name="section-5.2.3" href="#section-5.2.3">5.2.3</a>.  In-Network Computation</span>
+
+   A core function of IoT edge computing is to enable computation
+   offloading, i.e., to perform computation on an edge node on behalf of
+   a device or user.  The support for in-network computation may vary in
+   term of capability, e.g., computing nodes can host a virtual machine
+   able run stateful or stateless code, or a rule engine providing an
+   API to register actions in response to conditions such as IoT device
+   ID, sensor values to check, thresholds, etc.  Computation offloading
+   includes orchestration or application lifecycle related aspects, such
+   as: selecting an appropriate compute device based on available
+   resources, compute node properties, etc., and with varying goals
+   including for example load balancing and energy conservation;
+   onboarding code on a platform or compute device; assisted or
+   automatic partitioning of code; invoking remote code execution;
+   relocating an instance from one compute node to another.
+
+<span class="h4"><a class="selflink" name="section-5.2.4" href="#section-5.2.4">5.2.4</a>.  Edge Caching</span>
+
+   A purpose of local caching may be to enable local data processing
+   (e.g., pre-processing or analysis), or to enable delayed virtual or
+   physical shipping.  A responsibility of the edge caching component is
+   to manage data persistence, e.g., to schedule removal of data when it
+   is no longer needed.  Another aspect of this component may be to
+   authenticate and encrypt data.  It can for example take the form of a
+   distributed storage system, and deal with related issues, e.g.,
+   reaching and maintaining data consistency; enabling efficient access
+   to data, for example using some form of sharding.
+
+<span class="h4"><a class="selflink" name="section-5.2.5" href="#section-5.2.5">5.2.5</a>.  Other Services</span>
+
+   Data generated by IoT devices and associated information obtained
+   from the access network may be used to provide high level services
+   such as end device location, radio network information and bandwidth
+   management.
+
+<span class="h3"><a class="selflink" name="section-5.3" href="#section-5.3">5.3</a>.  Application Components</span>
+
+<span class="h4"><a class="selflink" name="section-5.3.1" href="#section-5.3.1">5.3.1</a>.  IoT End Devices Management</span>
+
+   IoT end device management includes managing information about the IoT
+   devices, including their sensors, how to communicate with them, etc.
+   Edge computing addresses the scalability challenges from the massive
+   number of IoT end devices and IoT data value by separating the
+   scalability domain into edge/local networks and remote network.
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 15]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-16" id="page-16" href="#page-16" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+<span class="h4"><a class="selflink" name="section-5.3.2" href="#section-5.3.2">5.3.2</a>.  Data Management</span>
+
+   With regard to the high level challenges listed in <a href="#section-4">Section 4</a>, data
+   storage and processing at the edge is a major aspect of IoT edge
+   computing.  Data may therefore need to be classified (e.g., in terms
+   of privacy, importance, validity, etc.).  Data analysis such as
+   performed in AI/ML tasks performed at the edge may benefit from
+   specialized hardware support on computing nodes.  IoT edge computing
+   will face challenges in term of, for example, programmability,
+   naming, data abstraction, data service management and data discovery
+   (discussed in communication brokering).  Furthermore, while edge
+   computing can support IoT services independently of cloud computing,
+   it can also be connected to cloud computing.  Thus, the relationship
+   of IoT edge computing to cloud computing, with regard to data
+   management, is another potential challenge [<a href="#ref-ISO_TR" title="&quot;Information Technology - Cloud Computing - Edge Computing Landscape&quot;">ISO_TR</a>].
+
+<span class="h3"><a class="selflink" name="section-5.4" href="#section-5.4">5.4</a>.  Simulation and Emulation Environments</span>
+
+   IoT Edge Computing brings new challenges to simulation and emulation
+   tools used by researchers and developers.  A varied set of
+   applications, network and computing technologies can coexist in a
+   distributed system, which make modelling difficult.  Scale, mobility
+   and resource management are additional challenges [<a href="#ref-SimulatingFog" title="&quot;Simulating Fog and Edge Computing Scenarios: An Overview and Research Challenges&quot;">SimulatingFog</a>].
+
+   Tools include simulators, where simplified application logic runs on
+   top of a fog network model, and emulators, where actual applications
+   can be deployed, typically in software containers, over a cloud
+   infrastructure (e.g.  Docker, Kubernetes) itself running over a
+   network emulating edge network conditions such as variable delays,
+   throughput and mobility events.  To gain in scale, emulated and
+   simulated systems can be used together in hybrid federation-based
+   approaches [<a href="#ref-PseudoDynamicTesting" title="&quot;Revealing Household Characteristics from Smart Meter Data&quot;">PseudoDynamicTesting</a>], while to gain in realism physical
+   devices can be interconnected with emulated systems.  Examples of
+   related work and platforms include the publicly accessible MEC
+   sandbox work recently initiated in ETSI [<a href="#ref-ETSI_Sandbox" title="&quot;Multi-access Edge Computing (MEC) MEC Sandbox Work Item&quot;">ETSI_Sandbox</a>], and open
+   source simulators and emulators ([<a href="#ref-AdvantEDGE" title="&quot;Mobile Edge Emulation Platform&quot;">AdvantEDGE</a>] emulator and tools
+   cited in [<a href="#ref-SimulatingFog" title="&quot;Simulating Fog and Edge Computing Scenarios: An Overview and Research Challenges&quot;">SimulatingFog</a>]).
+
+<span class="h2"><a class="selflink" name="section-6" href="#section-6">6</a>.  Security Considerations</span>
+
+   T.B.D.
+
+<span class="h2"><a class="selflink" name="section-7" href="#section-7">7</a>.  Acknowledgement</span>
+
+   The authors would like to thank Joo-Sang Youn, Akbar Rahman, Michel
+   Roy and Robert Gazda for their valuable comments and suggestions on
+   this document.
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 16]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-17" id="page-17" href="#page-17" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+<span class="h2"><a class="selflink" name="section-8" href="#section-8">8</a>.  References</span>
+
+<span class="h3"><a class="selflink" name="section-8.1" href="#section-8.1">8.1</a>.  Normative References</span>
+
+   [<a name="ref-RFC2119" id="ref-RFC2119">RFC2119</a>]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", <a href="./bcp14">BCP 14</a>, <a href="./rfc2119">RFC 2119</a>,
+              DOI 10.17487/RFC2119, March 1997,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;.
+
+<span class="h3"><a class="selflink" name="section-8.2" href="#section-8.2">8.2</a>.  Informative References</span>
+
+   [<a name="ref-AdvantEDGE" id="ref-AdvantEDGE">AdvantEDGE</a>]
+              "Mobile Edge Emulation Platform", Source Code Repository ,
+              January 2020,
+              &lt;<a href="https://github.com/InterDigitalInc/AdvantEDGE">https://github.com/InterDigitalInc/AdvantEDGE</a>&gt;.
+
+   [<a name="ref-Ashton" id="ref-Ashton">Ashton</a>]   Ashton, K., "That Internet of Things thing", RFID J. vol.
+              22, no. 7, pp. 97-114 , 2009.
+
+   [<a name="ref-Botta" id="ref-Botta">Botta</a>]    Botta, A., Donato, W., Persico, V., and A. Pescape,
+              "Integration of Cloud Computing and Internet of Things: A
+              survey", Future Gener. Comput. Syst., vol. 56, pp.
+              684-700 , 2016.
+
+   [<a name="ref-Chiang" id="ref-Chiang">Chiang</a>]   Chiang, M. and T. Zhang, "Fog and IoT: An overview of
+              research opportunities", IEEE Internet Things J., vol. 3,
+              no. 6, pp. 854-864 , 2016.
+
+   [<a name="ref-DATA-DISCOVERY" id="ref-DATA-DISCOVERY">DATA-DISCOVERY</a>]
+              McBride, M., Kutscher, D., Schooler, E., and CJ.
+              Bernardos, "Edge Data Discovery for COIN", Work in
+              Progress, Internet-Draft, <a href="./draft-mcbride-edge-data-discovery-overview">draft-mcbride-edge-data-</a>
+              <a href="./draft-mcbride-edge-data-discovery-overview">discovery-overview</a>, January 2020,
+              &lt;<a href="https://tools.ietf.org/html/draft-mcbride-edge-data-discovery-overview">https://tools.ietf.org/html/draft-mcbride-edge-data-</a>
+              <a href="https://tools.ietf.org/html/draft-mcbride-edge-data-discovery-overview">discovery-overview</a>&gt;.
+
+   [<a name="ref-ENERGY" id="ref-ENERGY">ENERGY</a>]   Beckel, C., Sadamori, L., Staake, T., and S. Santini,
+              "Revealing Household Characteristics from Smart Meter
+              Data", Energy, vol. 78, pp. 397-410 , 2014.
+
+   [<a name="ref-ETSI_MEC_01" id="ref-ETSI_MEC_01">ETSI_MEC_01</a>]
+              ETSI, ., "Multi-access Edge Computing (MEC); Terminology",
+              ETSI GS 001 , 2019, &lt;<a href="https://www.etsi.org/deliver/etsi_gs/MEC/001_099/001/02.01.01_60/gs_MEC001v020101p.pdf">https://www.etsi.org/deliver/etsi_gs/</a>
+              <a href="https://www.etsi.org/deliver/etsi_gs/MEC/001_099/001/02.01.01_60/gs_MEC001v020101p.pdf">MEC/001_099/001/02.01.01_60/gs_MEC001v020101p.pdf</a>&gt;.
+
+   [<a name="ref-ETSI_MEC_02" id="ref-ETSI_MEC_02">ETSI_MEC_02</a>]
+              ETSI, ., "Multi-access Edge Computing (MEC); Phase 2: Use
+              Cases and Requirements", ETSI GS 002 , 2016,
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 17]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-18" id="page-18" href="#page-18" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+              &lt;<a href="https://www.etsi.org/deliver/etsi_gs/MEC/001_099/002/02.01.01_60/gs_MEC002v020101p.pdf">https://www.etsi.org/deliver/etsi_gs/</a>
+              <a href="https://www.etsi.org/deliver/etsi_gs/MEC/001_099/002/02.01.01_60/gs_MEC002v020101p.pdf">MEC/001_099/002/02.01.01_60/gs_MEC002v020101p.pdf</a>&gt;.
+
+   [<a name="ref-ETSI_MEC_03" id="ref-ETSI_MEC_03">ETSI_MEC_03</a>]
+              ETSI, ., "Mobile Edge Computing (MEC); Framework and
+              Reference Architecture", ETSI GS 003 , 2019,
+              &lt;<a href="https://www.etsi.org/deliver/etsi_gs/MEC/001_099/003/02.01.01_60/gs_MEC003v020101p.pdf">https://www.etsi.org/deliver/etsi_gs/</a>
+              <a href="https://www.etsi.org/deliver/etsi_gs/MEC/001_099/003/02.01.01_60/gs_MEC003v020101p.pdf">MEC/001_099/003/02.01.01_60/gs_MEC003v020101p.pdf</a>&gt;.
+
+   [<a name="ref-ETSI_MEC_WP_28" id="ref-ETSI_MEC_WP_28">ETSI_MEC_WP_28</a>]
+              ETSI, ., "MEC in 5G networks", White Paper , 2018,
+              &lt;<a href="https://www.etsi.org/images/files/ETSIWhitePapers/etsi_wp28_mec_in_5G_FINAL.pdf">https://www.etsi.org/images/files/ETSIWhitePapers/</a>
+              <a href="https://www.etsi.org/images/files/ETSIWhitePapers/etsi_wp28_mec_in_5G_FINAL.pdf">etsi_wp28_mec_in_5G_FINAL.pdf</a>&gt;.
+
+   [<a name="ref-ETSI_Sandbox" id="ref-ETSI_Sandbox">ETSI_Sandbox</a>]
+              "Multi-access Edge Computing (MEC) MEC Sandbox Work Item",
+              Portal , January 2020,
+              &lt;<a href="https://portal.etsi.org/webapp/WorkProgram/Report_WorkItem.asp?WKI_ID=57671">https://portal.etsi.org/webapp/WorkProgram/</a>
+              <a href="https://portal.etsi.org/webapp/WorkProgram/Report_WorkItem.asp?WKI_ID=57671">Report_WorkItem.asp?WKI_ID=57671</a>&gt;.
+
+   [<a name="ref-Evans" id="ref-Evans">Evans</a>]    Evans, D., "The Internet of Things: How the next evolution
+              of the Internet is changing everything", CISCO White
+              Paper , 2011.
+
+   [<a name="ref-FLAME" id="ref-FLAME">FLAME</a>]    Horizon 2020 Programme, ., "FLAME Project", Portal , 2019,
+              &lt;<a href="https://www.ict-flame.eu/">https://www.ict-flame.eu/</a>&gt;.
+
+   [<a name="ref-IEEE-1934" id="ref-IEEE-1934">IEEE-1934</a>]
+              IEEE, ., "FOG - Fog Computing and Networking Architecture
+              Framework", Portal , 2019,
+              &lt;<a href="https://standards.ieee.org/standard/1934-2018.html">https://standards.ieee.org/standard/1934-2018.html</a>&gt;.
+
+   [<a name="ref-ISO_TR" id="ref-ISO_TR">ISO_TR</a>]   "Information Technology - Cloud Computing - Edge Computing
+              Landscape", ISO/IEC TR 23188 , 2018.
+
+   [<a name="ref-Kelly" id="ref-Kelly">Kelly</a>]    Kelly, R., "Internet of Things Data to Top 1.6 Zettabytes
+              by 2022", 2016,
+              &lt;<a href="https://campustechnology.com/articles/2015/04/15/internet-of-thingsdata-to-top-1-6-zettabytes-by-2020.aspx">https://campustechnology.com/articles/2015/04/15/</a>
+              <a href="https://campustechnology.com/articles/2015/04/15/internet-of-thingsdata-to-top-1-6-zettabytes-by-2020.aspx">internet-of-thingsdata-to-top-1-6-zettabytes-by-</a>
+              <a href="https://campustechnology.com/articles/2015/04/15/internet-of-thingsdata-to-top-1-6-zettabytes-by-2020.aspx">2020.aspx</a>&gt;.
+
+   [<a name="ref-Lin" id="ref-Lin">Lin</a>]      Lin, J., Yu, W., Zhang, N., Yang, X., Zhang, H., and W.
+              Zhao, "A survey on Internet of Things: Architecture,
+              enabling technologies, security and privacy, and
+              applications", IEEE Internet of Things J., vol. 4, no. 5,
+              pp. 1125-1142 , 2017.
+
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 18]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-19" id="page-19" href="#page-19" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   [<a name="ref-Linux_Foundation_Edge" id="ref-Linux_Foundation_Edge">Linux_Foundation_Edge</a>]
+              Linux Foundation, ., "Linux Foundation Edge", Portal ,
+              2019, &lt;<a href="https://www.lfedge.org/">https://www.lfedge.org/</a>&gt;.
+
+   [<a name="ref-Mahadev" id="ref-Mahadev">Mahadev</a>]  Satyanarayanan, M., "The Emergence of Edge Computing",
+              Computer, vol. 50, no. 1, pp. 30-39 , 2017.
+
+   [<a name="ref-NIST" id="ref-NIST">NIST</a>]     Mell, P. and T. Grance, "The NIST definition of Cloud
+              Computing", Natl. Inst. Stand. Technol, vol. 53, no. 6, p.
+              50 , 2009.
+
+   [<a name="ref-NVIDIA" id="ref-NVIDIA">NVIDIA</a>]   Grzywaczewski, A., "Training AI for Self-Driving Vehicles:
+              the Challenge of Scale", NVIDIA Developer Blog , 2017,
+              &lt;<a href="https://devblogs.nvidia.com/training-self-driving-vehicles-challenge-scale/">https://devblogs.nvidia.com/training-self-driving-</a>
+              <a href="https://devblogs.nvidia.com/training-self-driving-vehicles-challenge-scale/">vehicles-challenge-scale/</a>&gt;.
+
+   [<a name="ref-OpenEdgeComputing" id="ref-OpenEdgeComputing">OpenEdgeComputing</a>]
+              "Open Edge Computing", Portal , 2019,
+              &lt;<a href="http://openedgecomputing.org/">http://openedgecomputing.org/</a>&gt;.
+
+   [<a name="ref-OpenFog" id="ref-OpenFog">OpenFog</a>]  "OpenFog Reference Architecture for Fog Computing",
+              OpenFog Consortium , 2017.
+
+   [<a name="ref-POINT" id="ref-POINT">POINT</a>]    Horizon 2020 Programme, ., "IP Over ICN - the better IP
+              (POINT) Project", Portal , 2019,
+              &lt;<a href="https://www.point-h2020.eu/">https://www.point-h2020.eu/</a>&gt;.
+
+   [<a name="ref-PseudoDynamicTesting" id="ref-PseudoDynamicTesting">PseudoDynamicTesting</a>]
+              Ficco, M., Esposito, C., Xiang, Y., and F. Palmieri,
+              "Revealing Household Characteristics from Smart Meter
+              Data", IEEE Communications Magazine, Nov. 2017 , 2017.
+
+   [<a name="ref-RFC6291" id="ref-RFC6291">RFC6291</a>]  Andersson, L., van Helvoort, H., Bonica, R., Romascanu,
+              D., and S. Mansfield, "Guidelines for the Use of the "OAM"
+              Acronym in the IETF", <a href="./bcp161">BCP 161</a>, <a href="./rfc6291">RFC 6291</a>,
+              DOI 10.17487/RFC6291, June 2011,
+              &lt;<a href="https://www.rfc-editor.org/info/rfc6291">https://www.rfc-editor.org/info/rfc6291</a>&gt;.
+
+   [<a name="ref-Shi" id="ref-Shi">Shi</a>]      Shi, W., Cao, J., Zhang, Q., Li, Y., and L. Xu, "Edge
+              computing: vision and challenges", IEEE Internet of Things
+              J., vol. 3, no. 5, pp. 637-646 , 2016.
+
+   [<a name="ref-Sifalakis" id="ref-Sifalakis">Sifalakis</a>]
+              Sifalakis, M., Kohler, B., Scherb, C., and C. Tschudin,
+              "An Information Centric Network for Computing the
+              Distribution of Computations", Proceedings of the 1st
+              International Conference on Information-centric networking
+              (INC) , 2014.
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 19]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-20" id="page-20" href="#page-20" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   [<a name="ref-SimulatingFog" id="ref-SimulatingFog">SimulatingFog</a>]
+              Svorobej, S. and . al, "Simulating Fog and Edge Computing
+              Scenarios: An Overview and Research Challenges", MPDI
+              Future Internet 2019 , 2019.
+
+   [<a name="ref-StarlingX" id="ref-StarlingX">StarlingX</a>]
+              OpenStack Foundation, ., "StarlingX", Portal , 2019,
+              &lt;<a href="https://www.starlingx.io/">https://www.starlingx.io/</a>&gt;.
+
+   [<a name="ref-Weiner" id="ref-Weiner">Weiner</a>]   Weiner, M., Jorgovanovic, M., Sahai, A., and B. Nikolie,
+              "Design of a low-latency, high-reliability wireless
+              communication system for control applications", IEEE Int.
+              Conf. Commun. (ICC), Sydney, NSW, Australia, pp.
+              3829-3835 , 2014.
+
+   [<a name="ref-_3GPP.23.501" id="ref-_3GPP.23.501">_3GPP.23.501</a>]
+              3GPP, ., "System Architecture for the 5G System", 3GPP TS
+              23.501 , 2019,
+              &lt;<a href="http://www.3gpp.org/ftp/Specs/html-info/23501.htm">http://www.3gpp.org/ftp/Specs/html-info/23501.htm</a>&gt;.
+
+   [<a name="ref-_5G-CORAL" id="ref-_5G-CORAL">_5G-CORAL</a>]
+              Horizon 2020 Programme, ., "5G Convergent Virtualised
+              Radio Access Network Living at the Edge (5G-CORAL)
+              Project", Portal , 2019, &lt;<a href="http://5g-coral.eu/">http://5g-coral.eu/</a>&gt;.
+
+   [<a name="ref-_60802" id="ref-_60802">_60802</a>]   IEC/IEEE, ., "Use Cases IEC/IEEE 60802 V1.3", IEC/IEEE
+              60802 , 2018, &lt;<a href="http://www.ieee802.org/1/files/public/docs2018/60802-industrial-use-cases-0818-v13.pdf">http://www.ieee802.org/1/files/public/</a>
+              <a href="http://www.ieee802.org/1/files/public/docs2018/60802-industrial-use-cases-0818-v13.pdf">docs2018/60802-industrial-use-cases-0818-v13.pdf</a>&gt;.
+
+<span class="h2"><a class="selflink" name="appendix-A" href="#appendix-A">Appendix A</a>.  Overview of the IoT Edge Computing</span>
+
+   This list of initiatives, projects and products aim to provide an
+   overview of the IoT edge computing.
+
+   Our goal is to be representative rather than exhaustive.
+
+   Please help us complete this overview by communicating with us about
+   entries we have missed.
+
+<span class="h3"><a class="selflink" name="appendix-A.1" href="#appendix-A.1">A.1</a>.  Open Source Projects</span>
+
+<span class="h4"><a class="selflink" name="appendix-A.1.1" href="#appendix-A.1.1">A.1.1</a>.  Gateway/CPE Platforms</span>
+
+   EdgeX Foundry, Home Edge, Edge Virtualization Engine are Linux
+   Foundation projects ([<a href="#ref-Linux_Foundation_Edge" title="&quot;Linux Foundation Edge&quot;">Linux_Foundation_Edge</a>]) aiming to provide a
+   platform for edge computing devices.
+
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 20]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-21" id="page-21" href="#page-21" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   Such an open source platform can, for example, host proprietary
+   programs currently run on IoT gateway products (Appendix A.2).
+
+   EdgeX Foundry develops an edge computing framework running on the IoT
+   gateway.
+
+   Home Edge develops an edge computing framework especially dedicated
+   to home computing devices, controlling home appliances, sensors,
+   etc., and enabling AI applications, especially distributed and
+   parallel machine learning.
+
+   The Edge Virtualization Engine (EVE) project develops a
+   virtualization platform (for VMs and containers) designed to run
+   outside of the datacenter, in an edge network; EVE is deployed on
+   bare-metal hardware.
+
+   Computing devices:  Hardware support for EdgeX and EVE is similar:
+      they support x86 and ARM-based computing devices; A typical target
+      can be a Linux Raspberry Pi with 1GB RAM, 64bit CPU, 32GB storage.
+
+   Service platform:  EdgeX uses a micro-service architecture.  Micro-
+      services on the gateway are connected together, and to outside
+      applications, through REST, or messaging technologies such as
+      MQTT, AMQP and 0MQ.  The gateway can communicate with external
+      backend applications or other gateways (north-south in tiered
+      deployments or east-west in more distributed deployments).
+      Gateway-device communication can use a wide range of IoT
+      protocols.  "Export services" enable on-gateway and off-gateway
+      clients to register as recipient for data from devices.  Core
+      services are microservices that deal with persisting data from
+      devices or alternatively "streaming" device data through, without
+      persistence (core data service); managing information about the
+      IoT devices, including their sensors, how to communicate with
+      them, etc. (metadata service); and actual communication with IoT
+      devices, on behalf of other on-gateway or off-gateway services
+      (command service).  A rule engine provides an API to register
+      actions in response to conditions typically including an IoT
+      device ID, sensor values to check, thresholds, etc.  The
+      scheduling micro service deals with organizing the removal of data
+      persisted on the gateway.  Alerts and notifications microservice
+      can be used to dispatch alert/notifications from internal or
+      external sources to interested consumers including backend
+      servers, or human operators through email or SMS.
+
+   Edge cloud applications:  Target applications for EdgeX include
+      Industrial IoT (e.g., IoT sensor data and actuator control mixed
+      with augmented reality application for technicians).  Home Edge
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 21]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-22" id="page-22" href="#page-22" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+      focuses on smart home use cases, including using AI lifestyle and
+      safety applications.
+
+<span class="h4"><a class="selflink" name="appendix-A.1.2" href="#appendix-A.1.2">A.1.2</a>.  Edge Cloud Management Platforms</span>
+
+   This set of open-source projects setup and manage clouds of
+   individual edge computing devices.
+
+   StarlingX ([<a href="#ref-StarlingX" title="&quot;StarlingX&quot;">StarlingX</a>]) extends OpenStack to provide virtualization
+   platform management for edge clouds, which are distributed (in the
+   range of 100 compute devices), secure and highly available.
+
+   Akraino Edge Stack, another project from the Linux Fundation Edge
+   [<a href="#ref-Linux_Foundation_Edge" title="&quot;Linux Foundation Edge&quot;">Linux_Foundation_Edge</a>], has a wider scope of developing a management
+   platform adapted for the edge (e.g., covering 1000 plus locations),
+   aiming for zero-touch provisioning, and zero-touch lifecycle
+   management.
+
+   Computing devices:  Compute devices are typically Linux-based
+      application servers or more constrained devices.
+
+   Service platform:  StarlingX adds new management services to
+      OpenStack by leveraging building blocks such as Ceph for
+      distributed storage, Kubernetes for orchestration.  The new
+      services are for management of configuration (enabling auto-
+      discovery and configuration), faults, hosts (enabling host failure
+      detection and auto-recovery), services (providing high
+      availability through service redundancy and multi-path
+      communication) and software (enabling updates).
+
+   Edge cloud applications:  An edge computing platform may support a
+      wide range of use cases.  E.g., autonomous vehicles, industrial
+      automation and robotics, cloud RAN, metering and monitoring,
+      mobile HD video, content delivery, healthcare imaging and
+      diagnostics, caching and surveillance, augmented/virtual reality,
+      small cell services for high density locations (stadiums),
+      universal CPE applications, retail.
+
+<span class="h4"><a class="selflink" name="appendix-A.1.3" href="#appendix-A.1.3">A.1.3</a>.  Related Projects</span>
+
+   Open Edge Computing ([<a href="#ref-OpenEdgeComputing" title="&quot;Open Edge Computing&quot;">OpenEdgeComputing</a>]) is an initiative from
+   universities, manufacturers, infrastructure providers and operators,
+   enabling efficiently offloading cloudlets (VMs) to the edge.
+   Computing devices are typically powerful, well-connected servers
+   located in mobile networks (e.g., collocated with base stations or
+   aggregation sites).  The service platform is built on top of
+   OpenStack++, an extension of OpenStack to support cloudlets.  This
+   project is mentioned here as a related project because of its edge
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 22]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-23" id="page-23" href="#page-23" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   computing focus, and potential for some IoT use cases.  Nevertheless,
+   its primary use cases are typically non-IoT related, such as
+   offloading processing-intensive applications from a mobile device to
+   the edge.
+
+<span class="h3"><a class="selflink" name="appendix-A.2" href="#appendix-A.2">A.2</a>.  Products</span>
+
+<span class="h4"><a class="selflink" name="appendix-A.2.1" href="#appendix-A.2.1">A.2.1</a>.  IoT Gateways</span>
+
+   Multiple products are marketed as IoT gateways (Amazon Greengrass,
+   Microsoft Azure IoT Edge, Google Cloud IoT Core, and gateway
+   solutions from Bosh and Siemens).  They are typically composed of a
+   software frameworks that can run on a wide range of IoT gateway
+   hardware devices to provide local support for cloud services, as well
+   as some other local IoT gateway features such as relaying
+   communication and caching content.  Remote cloud is both used for
+   management of the IoT gateways, and for hosting customer application
+   components.  Some IoT gateway products (Amazon Snowball) have a
+   primary purpose of storing edge data on premises, to enable
+   physically moving this data into the cloud without incurring digital
+   data transfer cost.
+
+   Computing devices:  Typical computing devices run Linux, Windows or a
+      Real-Time OS over an ARM or x86 architecture.  The level of
+      service support on the computing device can range from low-level
+      packages giving maximum control to embedded developers, to high-
+      level SDKs.  Typical requirements can start at 1GHz and 128MB RAM,
+      e.g., ranging from Raspberry Pi to a server-level appliance.
+
+   Service platform:  IoT gateways can provide a range of service
+      including: running stateless functions; routing messages between
+      connected IoT devices (using a wide range of IoT protocols);
+      caching data; enabling some form of synchronization between IoT
+      devices; authenticating and encrypting device data.  Association
+      between IoT devices and gateway based can require a device
+      certificate.
+
+   Edge cloud applications:  Pre-processing of IoT data for later
+      processing in the cloud is a major driver.  Use cases include
+      industrial automation, farming, etc.
+
+<span class="h4"><a class="selflink" name="appendix-A.2.2" href="#appendix-A.2.2">A.2.2</a>.  Edge Cloud Platforms</span>
+
+   Services such as MobileEdgeX provide a platform for application
+   developers to deploy software (e.g., as software containers) on edge
+   networks.
+
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 23]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-24" id="page-24" href="#page-24" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   Computing devices:  Bare metal and virtual servers provided by mobile
+      network operators are used as computing devices.
+
+   Service platform:  The service platform provides end device location
+      service, using GPS data obtained from platform software deployed
+      in end devices, correlated with location information obtained from
+      the mobile network.  The service platform manages the deployment
+      of application instances (containers) on servers close to end
+      devices, using a declarative specification of optimal location
+      from the application provider.
+
+   Edge cloud applications:  Use cases include autonomous mobility,
+      asset management, AI-based systems (e.g., quality inspection,
+      assistance systems, safety and security cameras) and privacy-
+      preserving video processing.  There are also non-IoT use cases
+      such as augmented reality and gaming.
+
+<span class="h3"><a class="selflink" name="appendix-A.3" href="#appendix-A.3">A.3</a>.  Standards Initiatives</span>
+
+<span class="h4"><a class="selflink" name="appendix-A.3.1" href="#appendix-A.3.1">A.3.1</a>.  ETSI Multi-access Edge Computing</span>
+
+   The ETSI MEC industry standardization group develops specifications
+   that enable efficient and seamless integration of applications from
+   vendors, service providers, and 3rd parties across multi-vendor MEC
+   platforms ([<a href="#ref-ETSI_MEC_03" title="&quot;Mobile Edge Computing (MEC); Framework and Reference Architecture&quot;">ETSI_MEC_03</a>]).
+
+   Basic principles followed include: leveraging NFV infrastructure;
+   being compliant with 3GPP systems; focusing on orchestration, MEC
+   services, applications and platforms.
+
+   Phase 1 (2015-2016) focused on basic platform services.  Phase 2
+   (2017-2019) focuses on: supporting non-3GPP radio access
+   technologies, especially WiFi; supporting a distributed, multi-
+   operator and multi-vendor architecture; supporting non-VM based
+   virtualization such as containers and PaaS.
+
+   Computing devices:  Computing devices are typically application
+      servers, attached to an eNodeB or at a higher level of aggregation
+      point, and provide service to end users.
+
+   Service platform:  The mobile edge platform offers an environment
+      where the mobile edge applications can discover, advertise,
+      consume and offer mobile edge services.  The platform can provide
+      certain native services such as radio network information,
+      location, bandwidth management etc.  The platform manager is
+      responsible for managing the life cycle of applications including
+      informing the mobile edge orchestrator of relevant application
+      related events, managing the application rules and requirements
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 24]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-25" id="page-25" href="#page-25" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+      including service authorizations, traffic rules, DNS
+      configuration.
+
+   Edge cloud applications:  Some of the use cases for MEC
+      ([<a href="#ref-ETSI_MEC_02" title="&quot;Multi-access Edge Computing (MEC); Phase 2: Use Cases and Requirements&quot;">ETSI_MEC_02</a>]) are IoT-related, including: security and safety
+      (face recognition and monitoring), sensor data monitoring, active
+      device location (e.g., crowd management), low latency vehicle-to-
+      infrastructure and vehicle-to-vehicle (V2X, e.g., hazard
+      warnings), video production and delivery, camera as a service.
+
+<span class="h4"><a class="selflink" name="appendix-A.3.2" href="#appendix-A.3.2">A.3.2</a>.  Edge Computing Support in 3GPP</span>
+
+   The 3GPP standards organization included edge computing support in 5G
+   [<a href="#ref-_3GPP.23.501" title="&quot;System Architecture for the 5G System&quot;">_3GPP.23.501</a>].  Integration of MEC and 5G systems has been studied
+   in ETSI as well [<a href="#ref-ETSI_MEC_WP_28" title="&quot;MEC in 5G networks&quot;">ETSI_MEC_WP_28</a>].
+
+   Computing devices:  From 3GPP standpoint, a mobile device may access
+      any computing device located in a local data network, i.e.,
+      traffic is steered towards the local data network where the
+      computing device is located.
+
+   Service platform:  An external party may influence steering, QoS and
+      charging of traffic towards the computing device.  Session and
+      service continuity can ensure that edge service is maintained when
+      a client device moves.  The network supports multiple-anchor
+      connections, which makes it possible to connect a client device to
+      both a local and a remote data network.  The client device can be
+      made aware of the availability of a local area data network, based
+      on its location.
+
+   Edge cloud applications:  Edge cloud applications in 3GPP can help
+      support the major use cases envisioned for 5G, including massive
+      IoT and V2X.
+
+<span class="h4"><a class="selflink" name="appendix-A.3.3" href="#appendix-A.3.3">A.3.3</a>.  OpenFog and Industrial Internet Consortium</span>
+
+   The OpenFog Consortium (now merged with the Industrial Internet
+   Consortium) aims to standardize industrial IoT, fog, and edge
+   computing.  It produced a reference architecture for the fog
+   ([<a href="#ref-OpenFog" title="&quot;OpenFog Reference Architecture for Fog Computing&quot;">OpenFog</a>]), which has been published as IEEE standard P1934 in 2018.
+   This work continues within the Industrial Internet Consortium.
+
+   Computing devices:  Fog nodes include computational, networking,
+      storage and acceleration elements.  This includes nodes collocated
+      with sensors and actuators, roadside or mobile nodes involved in
+      V2X connectivity.  Fog nodes should be programmable and may
+      support multi-tenancy.  Fog computing devices must employ a
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 25]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-26" id="page-26" href="#page-26" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+      hardware-based immutable root of trust, i.e., a trusted hardware
+      component which receives control at power-on.
+
+   Service platform:  The service platform is structured around
+      "pillars" including: security end-to-end, scalability by adding
+      internal components or adding more fog nodes,openness in term of
+      discovery of/by other nodes and networks, autonomy from
+      centralized clouds (for discovery, orchestration and management,
+      security and operation) and hierarchical organization of fog
+      nodes.
+
+   Edge cloud applications:  Major use cases include smart cars and
+      traffic control, visual security and surveillance, smart cities.
+
+<span class="h4"><a class="selflink" name="appendix-A.3.4" href="#appendix-A.3.4">A.3.4</a>.  Related Standards</span>
+
+   The IEEE Fog Computing and Networking Architecture Framework Working
+   Group [<a href="#ref-IEEE-1934" title="&quot;FOG - Fog Computing and Networking Architecture Framework&quot;">IEEE-1934</a>] published the OpenFog architecture as an IEEE
+   document, and plan to do further work on taxonomy, architecture
+   framework, and compliance guidelines.
+
+<span class="h3"><a class="selflink" name="appendix-A.4" href="#appendix-A.4">A.4</a>.  Research Projects</span>
+
+<span class="h4"><a class="selflink" name="appendix-A.4.1" href="#appendix-A.4.1">A.4.1</a>.  Named Function Networking</span>
+
+   Named Function Networking ([<a href="#ref-Sifalakis" title="&quot;An Information Centric Network for Computing the Distribution of Computations&quot;">Sifalakis</a>]) is a research project that
+   aims to extend ICN concepts (especially named data networking) to
+   have the network orchestrate computation.  Interests are sent for a
+   combination of function and argument names, instead of using the
+   content name in NDN.
+
+   Computing devices:  NFN-capable switches are collocated with
+      computing devices.
+
+   Service platform:  NFN enables accessing static data and dynamic
+      computation results in one data-oriented framework, thus
+      benefiting from usual ICN features such as data authenticity and
+      caching, as well as enabling the network to perform various
+      optimizations, e.g., moving data, code or both closer to
+      requesters.  NFN also enables secure access to individual elements
+      within Named Data Objects, e.g., for filtering or aggregation.
+
+   Edge cloud applications:  Use cases include some form of MapReduce
+      operations and service chaining.  NDN, on which NFN is based, has
+      been studied in the context of IoT, where it can provide local
+      trust management and rendezvous service.
+
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 26]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-27" id="page-27" href="#page-27" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+<span class="h4"><a class="selflink" name="appendix-A.4.2" href="#appendix-A.4.2">A.4.2</a>.  5G-CORAL</span>
+
+   The 5G-CORAL project ([<a href="#ref-_5G-CORAL" title="&quot;5G Convergent Virtualised Radio Access Network Living at the Edge (5G-CORAL) Project&quot;">_5G-CORAL</a>]) aims to enable convergence of
+   access across multiple radio access technologies using fog computing,
+   using for this purpose an edge and fog computing system (EFS).
+
+   Computing devices:  Computing devices used in 5G-CORAL include cloud
+      and central data center servers, edge data center servers, and
+      fixed or mobile "fog computing devices", which can be computing
+      devices located in vehicles or factories, e.g., IoT gateways,
+      mobile phones, cyber-physical devices, etc.
+
+   Service platform:  5G-CORAL architecture is based on an integrated
+      virtualized edge and fog computing system (EFS), that aims to be
+      flexible, scalable and interoperable with other domains including
+      transport (fronthaul, backhaul), core and clouds.  An
+      Orchestration and Control System (OCS) enables automatic discovery
+      of heterogeneous, multiple-owner resources, and federate them into
+      a unified hosting environment.  OCS monitors resource usage to
+      guarantee service levels.  Finally, OCS also includes
+      orchestration and life cycle functions, including live migration
+      and scaling.  Applications (user and third-party) both inside and
+      outside the EFS subscribe to EFS services through APIs, with
+      emphasis on IoT and cyber-physical functionalities.
+
+   Edge cloud applications:  EFS-hosted services include analytics
+      obtained from IoT gateways (e.g., LORA or eNodeB gateways),
+      context information services from RATs, transport (fronthaul and
+      backhaul) and core networks.  EFS-hosted functions include network
+      performance acceleration functions, virtualized C-RAN functions
+      for access nodes and possible end user devices.
+
+<span class="h4"><a class="selflink" name="appendix-A.4.3" href="#appendix-A.4.3">A.4.3</a>.  FLAME</span>
+
+   The FLAME project ([<a href="#ref-FLAME" title="&quot;FLAME Project&quot;">FLAME</a>]) aims to improve performance of
+   interactive media systems while keeping infrastructure costs low.
+
+   It builds over virtualization technologies such as XOS, OpenStack and
+   ONOS/ODL to offer a programmable media service platform.
+
+   FLAME leverages IP-over-ICN technology developed through earlier
+   projects including POINT ([<a href="#ref-POINT" title="&quot;IP Over ICN - the better IP (POINT) Project&quot;">POINT</a>]).
+
+   Computing devices:  The FLAME platform provides a service layer on
+      top of an infrastructure platform, which can include cloud servers
+      as well as computing devices collocated with WiFi access points.
+
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 27]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-28" id="page-28" href="#page-28" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   Service platform:  The FLAME platform can be seen as an "edge +
+      cloud" computing platform with a use case focus on media
+      dissemination, although the basic platform can be suitable for
+      micro-services in general.  The computing platform is comprised
+      of: computing devices, an infrastructure platform (XOS, OpenStack,
+      ONOS/ODL), NFV-MANO components (orchestrator, virtual
+      infrastructure manager) and FLAME platform core services (PCE,
+      network access point, surrogate manager).
+
+   Edge cloud applications:  IoT use cases include public safety, such
+      as supporting body-worn camera for police and social workers.  As
+      opposed to other multi-media applications that are also envisioned
+      (pre-processing, user reporting, curation...), where a typical
+      goal is to curate content early at the edge, to reduce expected
+      high data volume, public safety use cases are typically about
+      implementing triggers at the edge: everything needs to be kept
+      anyway, to be available in case of an audit.  Content is stored
+      offline during off peak-hours delivery.  For privacy and data
+      volume concerns, triggers for, e.g., alerting police, cannot be
+      performed in the cloud and should be performed as close to the
+      data source as possible.
+
+Authors' Addresses
+
+   Jungha Hong
+   ETRI
+   218 Gajeong-ro, Yuseung-Gu
+   Daejeon
+
+   Email: jhong@etri.re.kr
+
+
+   Yong-Geun Hong
+   ETRI
+   218 Gajeong-ro, Yuseung-Gu
+   Daejeon
+
+   Email: yghong@etri.re.kr
+
+
+   Xavier de Foy
+   InterDigital Communications, LLC
+   1000 Sherbrooke West
+   Montreal  H3A 3G4
+   Canada
+
+   Email: xavier.defoy@interdigital.com
+
+
+
+
+<span class="grey">Hong, et al.              Expires 20 July 2020                 [Page 28]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-29" id="page-29" href="#page-29" class="invisible"> </a>
+<span class="grey">Internet-Draft             IoT Edge Computing               January 2020</span>
+
+
+   Matthias Kovatsch
+   Huawei Technologies Duesseldorf GmbH
+   Riesstr. 25 C // 3.OG
+   80992 Munich
+   Germany
+
+   Email: ietf@kovatsch.net
+
+
+   Eve Schooler
+   Intel
+   2200 Mission College Blvd.
+   Santa Clara, CA,  95054-1537
+   United States of America
+
+   Email: eve.m.schooler@intel.com
+
+
+   Dirk Kutscher
+   University of Applied Sciences Emden/Leer
+   Constantiaplatz 4
+   26723 Emden
+   Germany
+
+   Email: ietf@dkutscher.net
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hong, et al.              Expires 20 July 2020                 [Page 29]
+
+</pre><br />
+    <span class="noprint"><small><small>Html markup produced by rfcmarkup 1.129d, available from
+      <a href="https://tools.ietf.org/tools/rfcmarkup/">https://tools.ietf.org/tools/rfcmarkup/</a>
+    </small></small></span>
+  </div>
+</body>
+</html>

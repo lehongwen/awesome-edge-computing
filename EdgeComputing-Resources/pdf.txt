@@ -1,0 +1,32 @@
+服务化的5G核心网切片管理系统研究与实现
+http://html.rhhz.net/buptjournal/html/20180509.htm
+
+Rejiba Z, Masip-Bruin X, Marín-Tordera E. A Survey on Mobility-Induced Service Migration in the Fog, Edge, and Related Computing Paradigms[J]. ACM Computing Surveys (CSUR), 2019, 52(5): 90.
+
+面向5G的边缘服务基础架构和用户平面功能联合放置的框架
+Leyva-Pupo I, Santoyo-González A, Cervelló-Pastor C. A Framework for the Joint Placement of Edge Service Infrastructure and User Plane Functions for 5G[J]. Sensors, 2019, 19(18): 3975.
+
+Porambage P, Okwuibe J, Liyanage M, et al. Survey on multi-access edge computing for internet of things realization[J]. IEEE Communications Surveys & Tutorials, 2018, 20(4): 2961-2991.
+
+
+Puliafito C, Mingozzi E, Longo F, et al. Fog computing for the internet of things: A Survey[J]. ACM Transactions on Internet Technology (TOIT), 2019, 19(2): 18.
+
+Laghrissi A, Taleb T. A survey on the placement of virtual resources and virtual network functions[J]. IEEE Communications Surveys & Tutorials, 2018, 21(2): 1409-1434.
+
+Zhang F, Liu G, Fu X, et al. A survey on virtual machine migration: Challenges, techniques, and open issues[J]. IEEE Communications Surveys & Tutorials, 2018, 20(2): 1206-1243.
+
+Tuyisenge L, Ayaida M, Tohme S, et al. Handover Mechanisms in Internet of Vehicles (IoV): Survey, Trends, Challenges, and Issues[M]//Global Advancements in Connected and Intelligent Mobility: Emerging Research and Opportunities. IGI Global, 2020: 1-64.
+
+https://futurenetworks.ieee.org/tech-focus/december-2017/multi-access-edge-computing-overview-of-etsi
+
+面向边缘的计算系统的体系结构设计原理概述
+Nivethitha V, Aghila G. Survey on Architectural Design Principles for Edge Oriented Computing Systems[J]. Journal of Computational and Theoretical Nanoscience, 2019, 16(4): 1617-1624.
+
+多访问边缘计算：ETSI MEC ISG 概述
+Giust F, Costa-Perez X, Reznik A. Multi-access edge computing: An overview of ETSI MEC ISG[J]. IEEE 5G Tech Focus, 2017, 1(4).
+
+
+Rimal B P, Van D P, Maier M. Mobile edge computing empowered fiber-wireless access networks in the 5G era[J]. IEEE Communications Magazine, 2017, 55(2): 192-200.
+
+4G和5G移动网络中的MEC架构
+Zhang J, Wu Z, Xie W, et al. MEC Architectures in 4G and 5G Mobile Networks[C]//2018 10th International Conference on Wireless Communications and Signal Processing (WCSP). IEEE, 2018: 1-5.

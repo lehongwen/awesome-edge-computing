@@ -1,0 +1,3 @@
+https://datatracker.ietf.org/doc/search?name=MAMS&sort=&rfcs=on&activedrafts=on&olddrafts=on
+
+https://tools.ietf.org/pdf/draft-zhu-intarea-mams-user-protocol-08.pdf

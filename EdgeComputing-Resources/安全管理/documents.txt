@@ -1,0 +1,5 @@
+A Comprehensive Guide to 5G Security
+A Comprehensive Guide to 5G Security[M]. John Wiley & Sons, 2018.
+
+5G技术的安全性和隐私性调查：潜在解决方案，最新进展和未来方向
+Khan R, Kumar P, Jayakody D N K, et al. A Survey on Security and Privacy of 5G Technologies: Potential Solutions, Recent Advancements and Future Directions[J]. IEEE Communications Surveys & Tutorials, 2019.

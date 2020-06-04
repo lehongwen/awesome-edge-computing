@@ -99,6 +99,7 @@ CPE上联PON传输网络，下连具体业务设备，完成接入网络与用�
 
 ### Fujitsu
 ### GE
+### 施耐德
 ## 自动驾驶
 
 ## 无人机
@@ -238,6 +239,19 @@ Telstra与Ericsson、澳大利亚联邦银行合作，通过在5G网络上测试
 ### 中科边缘智慧
 边缘智能信息服务基础平台（III@E）系列产品提供者，通过边缘计算与智能计算的融合创新、自主可控及产业化，为国防军工和民用民生应用领域提供系统级自主可控解决方案与高标准高效率高质量服务。中科边缘智慧致力于信息系统平台关键技术及核心装备开发与研制，通过在数据服务（DaaS）和人工智能服务（AIaaS）等新一代信息技术领域的持续创新，以自主可控的技术、产品和应用为基础，以边缘计算、智能计算、云雾计算和大数据技术的创新突破和综合应用为主要技术特色。
 
+### 研华科技
+
+### Tata
+[https://www.tata.com/](https://www.tata.com/)
+
+### Nutanix
+[https://www.nutanix.com/en](https://www.nutanix.com/en)
+
+### 日海智能
+[http://www.sunseagroup.com/](http://www.sunseagroup.com/)
+
+### Aricent
+
 ## 网络安全服务商
 --------------
 
@@ -354,7 +368,4 @@ Edgegap的解决方案使视频游戏工作室能够改善玩家体验，同时�
 
 [https://www.w3.org/wiki/Networks/Edge_computing](https://www.w3.org/wiki/Networks/Edge_computing)
 
-### OpenARCloud
-
-### Pixeom
 

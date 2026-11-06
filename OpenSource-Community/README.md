@@ -84,6 +84,13 @@ Awesome Mobile Machine Learning
 
 <https://github.com/fritzlabs/Awesome-Mobile-Machine-Learning>
 
+FRACTAL
+-------
+
+A decentralized framework for federated learning, distributed edge computing, and training models directly on Android and edge devices.
+
+<https://github.com/AhmadHassan-BTed/FractalWorkspace>
+
 LF Edge
 =======
 

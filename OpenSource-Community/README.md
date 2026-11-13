@@ -87,9 +87,9 @@ Awesome Mobile Machine Learning
 FRACTAL
 -------
 
-A decentralized framework for federated learning, distributed edge computing, and training models directly on Android and edge devices.
+A decentralized framework for federated learning, distributed edge computing, and training models directly on Android and edge devices (non-commercial source-available).
 
-<https://github.com/AhmadHassan-BTed/FractalWorkspace>
+<https://github.com/Fractal-Compute-Orchestrations/FractalWorkspace>
 
 LF Edge
 =======
